@@ -73,7 +73,18 @@ async function getProcedimentos() {
     }
 }
 
+async function getHorarios(idCalendar, date, idLocal) {
+    try {
+        const response = await apiClient.get(`/schedule/filter/calendar/hours?idCalendar=${idCalendar}&date=${date}&local=${idLocal}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar horários:", error.response?.data || error.message);
+        throw new Error("Não foi possível buscar horários")
+    }
+}
+
 export const tiSaudeAPI = {
     getMedicos,
-    getProcedimentos
+    getProcedimentos,
+    getHorarios
 };
