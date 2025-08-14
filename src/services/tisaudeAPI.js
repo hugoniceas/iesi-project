@@ -63,6 +63,17 @@ async function getMedicos() {
     }
 }
 
+async function getProcedimentos() {
+    try {
+        const response = await apiClient.get('/procedures?all=true&noPaginate=true');
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar procedimentos:", error.response?.data || error.message);
+        throw new Error("Não foi possível buscar procedimentos");
+    }
+}
+
 export const tiSaudeAPI = {
-    getMedicos
+    getMedicos,
+    getProcedimentos
 };
