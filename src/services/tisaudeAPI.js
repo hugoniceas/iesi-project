@@ -83,8 +83,23 @@ async function getHorarios(idCalendar, date, idLocal) {
     }
 }
 
+async function getPacientes(searchTerm = '') {
+    try {
+        const response = await apiClient.get('/patients',{
+            params: {
+                search: searchTerm
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar pacientes:", error.response?.data || error.message);
+        throw new Error("Não foi possível buscar pacientes");
+    }
+}
+
 export const tiSaudeAPI = {
     getMedicos,
     getProcedimentos,
-    getHorarios
+    getHorarios,
+    getPacientes
 };
