@@ -16,3 +16,24 @@ export async function GET(request) {
         );
     }
 }
+
+export async function POST(request) {
+    try{
+        const dadosPaciente = await request.json();
+        if (!dadosPaciente || !dadosPaciente.name) {
+            return NextResponse.json(
+                { message: 'O nome do paciente é obrigatório'},
+                { status: 400}
+            );
+        }
+
+        const novoPaciente = await tiSaudeAPI.createPaciente(dadosPaciente);
+        return NextResponse.json(novoPaciente, {status: 201})
+    } catch (error) {
+       console.error("Falha na API ao criar paciente");
+        return NextResponse.json(
+            { message: 'Erro ao criar paciente', error: error.message },
+            { status: 500 }
+        ); 
+    }
+}

@@ -112,10 +112,21 @@ async function getAgendamentos(date, filtros = {}) {
     }
 }
 
+async function createPaciente(dadosPaciente) {
+    try {
+        const response = await apiClient.post('/patients/create', dadosPaciente);
+        return response.data;
+    } catch (error) {
+      console.error("Erro ao criar paciente:", error.response?.data || error.message);
+    throw new Error("Não foi possível criar novo paciente")  
+    }
+}
+
 export const tiSaudeAPI = {
     getMedicos,
     getProcedimentos,
     getHorarios,
     getPacientes,
-    getAgendamentos
+    getAgendamentos,
+    createPaciente
 };
