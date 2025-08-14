@@ -1,7 +1,7 @@
 import axios from 'axios';
 import NodeCache from 'node-cache';
 
-const tokenCache = new NodeCache({stdTTL: 1757792400})
+const tokenCache = new NodeCache({stdTTL: 2419200})
 
 const apiClient = axios.create({
     baseURL: process.env.TISAUDE_API_URL,
@@ -26,7 +26,7 @@ async function loginCacheToken() {
         return token;
 
     } catch (error) {
-        console.error("Falha ao autenticar:", error.response?.data || error.mesage);
+        console.error("Falha ao autenticar:", error.response?.data || error.message);
         throw new Error("Não foi possível autenticar");
     }
 }
@@ -39,3 +39,30 @@ async function getToken() {
         return await loginCacheToken();
     }
 }
+
+apiClient.interceptors.request.use(async (config) => {
+    if (config.url == '/login') {
+        return config;
+    }
+
+    const token = await getToken();
+    config.headers.Authorization = `Bearer ${token}`;
+
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+})
+
+async function getMedicos() {
+    try {
+        const response = await apiClient.get('/schedule/doctors?local=1');
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar médicos:", error.response?.data || error.message);
+        throw new Error("Não foi possível buscar médicos");
+    }
+}
+
+export const tiSaudeAPI = {
+    getMedicos
+};
