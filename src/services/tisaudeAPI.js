@@ -97,9 +97,25 @@ async function getPacientes(searchTerm = '') {
     }
 }
 
+async function getAgendamentos(date, filtros = {}) {
+    try {
+        if (!date) {
+            throw new Error("Data é obrigatória");
+        }
+        const response = await apiClient.get(`/schedule/${date}`, {
+            params: filtros
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar agendamentos:", error.response?.data || error.message);
+        throw new Error("Não foi possível buscar agendamentos")
+    }
+}
+
 export const tiSaudeAPI = {
     getMedicos,
     getProcedimentos,
     getHorarios,
-    getPacientes
+    getPacientes,
+    getAgendamentos
 };
