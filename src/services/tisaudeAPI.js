@@ -149,6 +149,33 @@ async function createAgendamento(dadosAgendamento) {
     }
 }
 
+async function updateAgendamento(idAgendamento, dadosAtualizar) {
+    const client = getApiClient();
+    try {
+        const response = await client.put(`/schedule/edit/${idAgendamento}`, dadosAtualizar);
+        return response.data;
+    } catch (error) {
+            if (error.response?.data && error.response.data.message === 'Server Error') {
+                console.warn("AVISO: 'Server Error' recebido, mas não será tratado como erro.");
+                return { ...error.response.data, message: 'Agendamento atualizado com sucesso (falso positivo)' };
+            } else {
+                console.error("Erro ao atualizar agendamento:", error.response?.data || error.message);
+                throw new Error("Não foi possível atualizar agendamento");
+            }
+    }
+}
+
+async function getAgendamentoByID(idAgendamento) {
+    const client = getApiClient();
+    try {
+        const response = await client.get(`/schedule/appointment/${idAgendamento}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao procurar agendamento por id:", error.response?.data || error.message);
+        throw new Error("Não foi possível procurar agendamento por id")    
+    }
+}
+
 export const tiSaudeAPI = {
     getMedicos,
     getProcedimentos,
@@ -156,5 +183,7 @@ export const tiSaudeAPI = {
     getPacientes,
     getAgendamentos,
     createPaciente,
-    createAgendamento
+    createAgendamento,
+    updateAgendamento,
+    getAgendamentoByID
 };
