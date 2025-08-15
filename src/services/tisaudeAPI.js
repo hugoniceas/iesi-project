@@ -1,20 +1,40 @@
 import axios from 'axios';
 import NodeCache from 'node-cache';
 
-console.log("[tiSaudeAPI.js] Lendo a variável de ambiente TISAUDE_API_URL:", process.env.TISAUDE_API_URL);
-
 const tokenCache = new NodeCache({stdTTL: 2419200})
 
-const apiClient = axios.create({
-    baseURL: process.env.TISAUDE_API_URL,
-    headers: {
-        'Content-Type': 'application/json'
+let apiClient = null;
+
+function getApiClient() {
+    if (apiClient == null) {
+        apiClient = axios.create({
+            baseURL: process.env.TISAUDE_API_URL,
+            headers: {
+                    'Content-Type': 'application/json'
+                    }
+});
+    apiClient.interceptors.request.use(async (config) => {
+    if (config.url == '/login') {
+        return config;
     }
+
+    const token = await getToken();
+    config.headers.Authorization = `Bearer ${token}`;
+
+    return config;
+}, (error) => {
+    return Promise.reject(error);
 });
 
+    
+    }
+    return apiClient;
+}
+
 async function loginCacheToken() {
+    const client = getApiClient();
     try {
-        const response = await apiClient.post('/login', {
+        const response = await client.post('/login', {
             login: process.env.TISAUDE_API_USER,
             senha: process.env.TISAUDE_API_PASSWORD
         });
@@ -42,22 +62,11 @@ async function getToken() {
     }
 }
 
-apiClient.interceptors.request.use(async (config) => {
-    if (config.url == '/login') {
-        return config;
-    }
-
-    const token = await getToken();
-    config.headers.Authorization = `Bearer ${token}`;
-
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-})
 
 async function getMedicos() {
+    const client = getApiClient();
     try {
-        const response = await apiClient.get('/schedule/doctors?local=1');
+        const response = await client.get('/schedule/doctors?local=1');
         return response.data;
     } catch (error) {
         console.error("Erro ao buscar médicos:", error.response?.data || error.message);
@@ -66,8 +75,9 @@ async function getMedicos() {
 }
 
 async function getProcedimentos() {
+    const client = getApiClient();
     try {
-        const response = await apiClient.get('/procedures?all=true&noPaginate=true');
+        const response = await client.get('/procedures?all=true&noPaginate=true');
         return response.data;
     } catch (error) {
         console.error("Erro ao buscar procedimentos:", error.response?.data || error.message);
@@ -76,8 +86,9 @@ async function getProcedimentos() {
 }
 
 async function getHorarios(idCalendar, date, idLocal) {
+    const client = getApiClient();
     try {
-        const response = await apiClient.get(`/schedule/filter/calendar/hours?idCalendar=${idCalendar}&date=${date}&local=${idLocal}`);
+        const response = await client.get(`/schedule/filter/calendar/hours?idCalendar=${idCalendar}&date=${date}&local=${idLocal}`);
         return response.data;
     } catch (error) {
         console.error("Erro ao buscar horários:", error.response?.data || error.message);
@@ -86,8 +97,9 @@ async function getHorarios(idCalendar, date, idLocal) {
 }
 
 async function getPacientes(searchTerm = '') {
+    const client = getApiClient();
     try {
-        const response = await apiClient.get('/patients',{
+        const response = await client.get('/patients',{
             params: {
                 search: searchTerm
             }
@@ -100,11 +112,12 @@ async function getPacientes(searchTerm = '') {
 }
 
 async function getAgendamentos(date, filtros = {}) {
+    const client = getApiClient();
     try {
         if (!date) {
             throw new Error("Data é obrigatória");
         }
-        const response = await apiClient.get(`/schedule/${date}`, {
+        const response = await client.get(`/schedule/${date}`, {
             params: filtros
         });
         return response.data;
@@ -115,8 +128,9 @@ async function getAgendamentos(date, filtros = {}) {
 }
 
 async function createPaciente(dadosPaciente) {
+    const client = getApiClient();
     try {
-        const response = await apiClient.post('/patients/create', dadosPaciente);
+        const response = await client.post('/patients/create', dadosPaciente);
         return response.data;
     } catch (error) {
         console.error("Erro ao criar paciente:", error.response?.data || error.message);
@@ -125,8 +139,9 @@ async function createPaciente(dadosPaciente) {
 }
 
 async function createAgendamento(dadosAgendamento) {
+    const client = getApiClient();
     try {
-        const response = await apiClient.post('/schedule/new', dadosAgendamento);
+        const response = await client.post('/schedule/new', dadosAgendamento);
         return response.data;
     } catch (error) {
         console.error("Erro ao criar agendamento:", error.response?.data || error.message);
