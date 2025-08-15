@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
+npm install
+docker run -d --name meu-rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+docker start meu-rabbitmq
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## PoC - Serviço de Agendamento Eletrônico
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Projeto para a disciplina de Integração e Evolução de Sistemas de Informação
+Curso: Ciências da Computação - 25.1 - CIn UFPE
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Grupo responsável pelo projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- André Vinícius Nascimento
+- Cássio Diniz
+- Diego Lyra
+- Emmanuel Silva
+- Gabriel Almeida
+- Gabriel Bezerra
+- Guilherme Siqueira
+- Ivo Neto
+- Hugo Nicéas
+- Pedro Fischer
+- Renato Correia
+- Walter Crasto
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Como rodar o projeto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Instale as dependências na pasta raiz do projeto:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+	```bash
+	npm install
+	```
 
-## Deploy on Vercel
+2. Instale o Docker. Caso ainda não tenha o RabbitMQ instalado como imagem no Docker, utilize o comando:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+	```bash
+	docker run -d --name meu-rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+	```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+	Se já tiver a imagem do RabbitMQ, basta usar:
+
+	```bash
+	docker start meu-rabbitmq
+	```
+
+3. Inicialize o worker do projeto, entrando na pasta raiz e executando:
+
+	```bash
+	node workers/agendamentoWorker.js
+	```
+
+4. Abra outro terminal e execute:
+
+	```bash
+	npm run dev
+	```
+
+---
+
+Pronto! O projeto estará rodando.
