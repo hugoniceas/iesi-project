@@ -52,7 +52,13 @@ export default function MarcarConsulta() {
   }, [medicoSelecionado, dataSelecionada]);
 
   return (
-    <div className="font-sans flex flex-col items-center justify-center min-h-screen p-8 gap-8 bg-gray-100">
+  <div className="font-sans flex flex-col items-center justify-center min-h-screen p-8 gap-8 bg-gray-100 relative">
+      <button
+        className="absolute top-6 left-6 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-4 rounded shadow transition-colors border border-gray-400"
+        onClick={() => window.location.href = '/'}
+      >
+        ← Voltar
+      </button>
       <h1 className="text-2xl font-bold mb-8 text-center text-blue-900">Marcar Consulta</h1>
       <div className="flex flex-col gap-6 w-full max-w-md bg-white p-6 rounded-xl shadow">
         {/* Barra de pesquisa de médico */}
@@ -100,7 +106,7 @@ export default function MarcarConsulta() {
   <label className="font-semibold mb-2 text-gray-800">Selecione a data:</label>
         <input
           type="date"
-          className="border rounded px-3 py-2 mb-4"
+          className="border rounded px-3 py-2 mb-4 text-gray-900"
           value={dataSelecionada}
           onChange={e => setDataSelecionada(e.target.value)}
           disabled={!medicoSelecionado}

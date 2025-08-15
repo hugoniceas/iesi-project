@@ -44,7 +44,13 @@ export default function RegistrarPaciente() {
 	};
 
 		return (
-			<div className="font-sans flex flex-col items-center justify-center min-h-screen p-8 gap-8 bg-gray-100">
+		<div className="font-sans flex flex-col items-center justify-center min-h-screen p-8 gap-8 bg-gray-100 relative">
+				<button
+					className="absolute top-6 left-6 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-4 rounded shadow transition-colors border border-gray-400"
+					onClick={() => window.location.href = '/'}
+				>
+					← Voltar
+				</button>
 				<h1 className="text-2xl font-bold mb-8 text-center text-blue-900">Registrar Paciente</h1>
 				{medicoNome && data && horario && (
 					<div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded text-blue-900 font-semibold text-center">

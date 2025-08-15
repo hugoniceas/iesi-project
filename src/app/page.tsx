@@ -10,7 +10,7 @@ export default function Home() {
           Marcar Consulta
         </a>
         <a
-          href="/check-in"
+          href="/checkin"
           className="bg-green-700 hover:bg-green-800 text-white font-bold py-5 rounded-xl shadow-lg text-center text-xl transition-colors border border-green-900"
         >
           Receber Paciente (Check-in)
