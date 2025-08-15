@@ -1,6 +1,8 @@
 import axios from 'axios';
 import NodeCache from 'node-cache';
 
+console.log("[tiSaudeAPI.js] Lendo a variável de ambiente TISAUDE_API_URL:", process.env.TISAUDE_API_URL);
+
 const tokenCache = new NodeCache({stdTTL: 2419200})
 
 const apiClient = axios.create({
@@ -117,8 +119,18 @@ async function createPaciente(dadosPaciente) {
         const response = await apiClient.post('/patients/create', dadosPaciente);
         return response.data;
     } catch (error) {
-      console.error("Erro ao criar paciente:", error.response?.data || error.message);
-    throw new Error("Não foi possível criar novo paciente")  
+        console.error("Erro ao criar paciente:", error.response?.data || error.message);
+        throw new Error("Não foi possível criar novo paciente")  
+    }
+}
+
+async function createAgendamento(dadosAgendamento) {
+    try {
+        const response = await apiClient.post('/schedule/new', dadosAgendamento);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao criar agendamento:", error.response?.data || error.message);
+        throw new Error("Não foi possível criar novo agendamento")
     }
 }
 
@@ -128,5 +140,6 @@ export const tiSaudeAPI = {
     getHorarios,
     getPacientes,
     getAgendamentos,
-    createPaciente
+    createPaciente,
+    createAgendamento
 };

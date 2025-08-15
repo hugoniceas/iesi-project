@@ -32,6 +32,30 @@ async function publishMessage(queue, message) {
     }
 }
 
+async function consumeMessage(queue, callback) {
+    try {
+        await connect();
+        await channel.assertQueue(queue, {durable:true});
+
+        console.log('Aguardando mensagens na fila:', queue);
+        channel.consume(queue, (msg) => {
+            if (msg !== null) {
+                const messageContent = JSON.parse(msg.content.toString());
+                console.log('Mensagem Recebida:', messageContent);
+
+                callback(messageContent);
+                channel.ack(msg);
+            }
+        }, {
+            noAck: false
+        });
+
+    } catch(error) {
+        console.error(`Erro ao consumir a fila ${queue}: ${error}`);
+    }
+}
+
 export const mqService = {
-    publishMessage
+    publishMessage,
+    consumeMessage
 };

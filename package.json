@@ -2,6 +2,7 @@
   "name": "iesi-project",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -11,6 +12,7 @@
   "dependencies": {
     "amqplib": "^0.10.8",
     "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
     "next": "15.4.6",
     "node-cache": "^5.1.2",
     "react": "19.1.0",
