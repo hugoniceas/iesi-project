@@ -1,7 +1,3 @@
-npm install
-docker run -d --name meu-rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:3-management
-docker start meu-rabbitmq
-npm run dev
 ## PoC - Serviço de Agendamento Eletrônico
 
 Projeto para a disciplina de Integração e Evolução de Sistemas de Informação
